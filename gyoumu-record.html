@@ -53,25 +53,31 @@
   <form action="https://docs.google.com/forms/d/e/1FAIpQLScTN3yAYwQK-jif1_A1YhcKr0XDKaqcKPxqdgvMGQQPfuaBig/formResponse" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
 
     <label>日付</label>
-    <input type="date" name="entry.1111111111" required>
+    <input type="date" name="entry.1111111111" id="todayDate" required>
 
     <label>点呼時刻</label>
-    <input type="time" name="entry.2222222222" required>
+    <input type="time" name="entry.2222222222" id="nowTime" required>
 
     <label>点呼区分</label>
-    <select name="entry.3333333333">
+    <select name="entry.3333333333" id="shiftType" onchange="toggleFields()">
       <option value="業務前">業務前</option>
       <option value="業務後">業務後</option>
     </select>
 
-    <label>走行距離（運行前）</label>
-    <input type="number" name="entry.4444444444" min="0">
+    <!-- 業務前専用 -->
+    <div id="beforeFields">
+      <label>走行距離（運行前）</label>
+      <input type="number" name="entry.4444444444" min="0">
+    </div>
 
-    <label>走行距離（運行後）</label>
-    <input type="number" name="entry.5555555555" min="0">
+    <!-- 業務後専用 -->
+    <div id="afterFields" style="display:none;">
+      <label>走行距離（運行後）</label>
+      <input type="number" name="entry.5555555555" min="0">
 
-    <label>総走行距離</label>
-    <input type="number" name="entry.6666666666" min="0">
+      <label>総走行距離</label>
+      <input type="number" name="entry.6666666666" min="0">
+    </div>
 
     <label>アルコール検知器使用</label>
     <select name="entry.7777777777">
@@ -102,5 +108,23 @@
 
   <iframe name="hidden_iframe" style="display:none;"></iframe>
 
+  <script>
+    // 日付と時刻の自動入力
+    window.onload = function() {
+      const now = new Date();
+      document.getElementById('todayDate').value = now.toISOString().split('T')[0];
+      document.getElementById('nowTime').value = now.toTimeString().slice(0,5);
+    };
+
+    // 点呼区分による表示切り替え
+    function toggleFields() {
+      const type = document.getElementById('shiftType').value;
+      document.getElementById('beforeFields').style.display = (type === '業務前') ? 'block' : 'none';
+      document.getElementById('afterFields').style.display = (type === '業務後') ? 'block' : 'none';
+    }
+  </script>
+
 </body>
 </html>
+
+
